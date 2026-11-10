@@ -1,16 +1,167 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Bar Component</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f6f7fb;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            width: 350px;
+            margin-bottom: 30px;
+        }
+
+        /* Background progress line */
+        .progress-container::before {
+            content: "";
+            background-color: #ddd;
+            position: absolute;
+            height: 4px;
+            width: 100%;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            z-index: -1;
+        }
+
+        /* Active progress line */
+        .progress {
+            background-color: #3498db;
+            position: absolute;
+            height: 4px;
+            width: 0%;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            z-index: -1;
+            transition: width 0.3s ease;
+        }
+
+        /* Circles */
+        .circle {
+            background-color: white;
+            color: #999;
+            border: 3px solid #ddd;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s ease;
+        }
+
+        .circle.active {
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        /* Buttons */
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 25px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
-</script>
+
+    <div class="container">
+
+        <div class="progress-container">
+
+            <div class="progress" id="progress"></div>
+
+            <div class="circle active" id="circle-1">1</div>
+            <div class="circle" id="circle-2">2</div>
+            <div class="circle" id="circle-3">3</div>
+            <div class="circle" id="circle-4">4</div>
+            <div class="circle" id="circle-5">5</div>
+
+        </div>
+
+        <button id="prev" disabled>Previous</button>
+        <button id="next">Next</button>
+
+    </div>
+
+    <script>
+        const next = document.getElementById("next");
+        const prev = document.getElementById("prev");
+        const progress = document.getElementById("progress");
+
+        const circles = document.querySelectorAll(".circle");
+
+        let currentStep = 1;
+
+        // Next button
+        next.addEventListener("click", function () {
+            if (currentStep < circles.length) {
+                currentStep++;
+                updateProgress();
+            }
+        });
+
+        // Previous button
+        prev.addEventListener("click", function () {
+            if (currentStep > 1) {
+                currentStep--;
+                updateProgress();
+            }
+        });
+
+        // Update progress bar
+        function updateProgress() {
+
+            // Activate and deactivate circles
+            circles.forEach(function (circle, index) {
+                if (index < currentStep) {
+                    circle.classList.add("active");
+                } else {
+                    circle.classList.remove("active");
+                }
+            });
+
+            // Update progress line
+            progress.style.width =
+                ((currentStep - 1) / (circles.length - 1)) * 100 + "%";
+
+            // Enable and disable buttons
+            prev.disabled = currentStep === 1;
+            next.disabled = currentStep === circles.length;
+        }
+    </script>
 
 </body>
-
 </html>
